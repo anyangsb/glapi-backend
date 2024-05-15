@@ -6,7 +6,6 @@ import com.gl.project.common.BaseResponse;
 import com.gl.project.common.DeleteRequest;
 import com.gl.project.common.ErrorCode;
 import com.gl.project.common.ResultUtils;
-import com.gl.project.config.WxOpenConfig;
 import com.gl.project.constant.UserConstant;
 import com.gl.project.exception.BusinessException;
 import com.gl.project.exception.ThrowUtils;
@@ -51,8 +50,6 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @Resource
-    private WxOpenConfig wxOpenConfig;
 
     // region 登录相关
 

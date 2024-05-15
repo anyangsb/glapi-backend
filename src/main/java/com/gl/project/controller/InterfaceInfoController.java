@@ -2,11 +2,9 @@ package com.gl.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gl.glapiclientsdk.client.GlApiClient;
 import com.gl.project.annotation.AuthCheck;
-import com.gl.project.common.BaseResponse;
-import com.gl.project.common.DeleteRequest;
-import com.gl.project.common.ErrorCode;
-import com.gl.project.common.ResultUtils;
+import com.gl.project.common.*;
 import com.gl.project.constant.CommonConstant;
 import com.gl.project.exception.BusinessException;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
@@ -15,6 +13,7 @@ import com.gl.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.gl.project.model.entity.InterfaceInfo;
 import com.gl.project.model.entity.User;
+import com.gl.project.model.enums.InterfaceInfoStatusEnum;
 import com.gl.project.service.InterfaceInfoService;
 import com.gl.project.service.UserService;
 import com.google.gson.Gson;
@@ -43,8 +42,8 @@ public class InterfaceInfoController {
     @Resource
     private UserService userService;
 
-//    @Resource
-//    private YuApiClient yuApiClient;
+    @Resource
+    private GlApiClient glApiClient;
 
     // region 增删改查
 
@@ -202,40 +201,87 @@ public class InterfaceInfoController {
     // endregion
 
 
+    @PostMapping("/online")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
+                                                     HttpServletRequest request) {
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long id = idRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 判断该接口是否可以调用
+        com.gl.glapiclientsdk.model.User user = new com.gl.glapiclientsdk.model.User();
+        user.setUsername("test");
+        String username = glApiClient.getUserNameByPost(user);
+        if (StringUtils.isBlank(username)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
+        }
+        // 仅本人或管理员可修改
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
 
+    /**
+     * 下线
+     *
+     * @param idRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest,
+                                                      HttpServletRequest request) {
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long id = idRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 仅本人或管理员可修改
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
 
+    @PostMapping("/invoke")
+    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
+                                                    HttpServletRequest request) {
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long id = interfaceInfoInvokeRequest.getId();
+        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        if (oldInterfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue()) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
+        }
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        GlApiClient tempClient = new GlApiClient(accessKey, secretKey);
+        Gson gson = new Gson();
+        com.gl.glapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.gl.glapiclientsdk.model.User.class);
+        String usernameByPost = tempClient.getUserNameByPost(user);
+        return ResultUtils.success(usernameByPost);
+    }
 
-//    /**
-//     * 测试调用
-//     *
-//     * @param interfaceInfoInvokeRequest
-//     * @param request
-//     * @return
-//     */
-//    @PostMapping("/invoke")
-//    public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
-//                                                     HttpServletRequest request) {
-//        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
-//            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-//        }
-//        long id = interfaceInfoInvokeRequest.getId();
-//        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
-//        // 判断是否存在
-//        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
-//        if (oldInterfaceInfo == null) {
-//            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-//        }
-//        if (oldInterfaceInfo.getStatus() == InterfaceInfoStatusEnum.OFFLINE.getValue()) {
-//            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
-//        }
-//        User loginUser = userService.getLoginUser(request);
-//        String accessKey = loginUser.getAccessKey();
-//        String secretKey = loginUser.getSecretKey();
-//        YuApiClient tempClient = new YuApiClient(accessKey, secretKey);
-//        Gson gson = new Gson();
-//        com.yupi.yuapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.yupi.yuapiclientsdk.model.User.class);
-//        String usernameByPost = tempClient.getUsernameByPost(user);
-//        return ResultUtils.success(usernameByPost);
-//    }
 
 }

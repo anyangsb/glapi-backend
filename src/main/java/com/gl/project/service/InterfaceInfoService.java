@@ -22,7 +22,7 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
      * @param post
      * @param add
      */
-    void validInterfaceInfo(InterfaceInfo post, boolean add);
+    void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
 
     /**
      * 获取查询条件
