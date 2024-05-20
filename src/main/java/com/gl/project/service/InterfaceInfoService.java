@@ -1,14 +1,7 @@
 package com.gl.project.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gl.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
-import com.gl.project.model.entity.InterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gl.project.model.entity.InterfaceInfo;
-import com.gl.project.model.vo.InterfaceInfoVO;
-
-import javax.servlet.http.HttpServletRequest;
+import com.gl.glapicommon.model.entity.InterfaceInfo;
 
 /**
 * @author 19328

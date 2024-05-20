@@ -1,7 +1,7 @@
 package com.gl.project.service;
 
-import com.gl.project.model.entity.UserInterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gl.glapicommon.model.entity.UserInterfaceInfo;
 
 /**
 * @author 19328

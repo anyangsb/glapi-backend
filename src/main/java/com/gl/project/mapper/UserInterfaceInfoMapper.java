@@ -1,7 +1,9 @@
 package com.gl.project.mapper;
 
-import com.gl.project.model.entity.UserInterfaceInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gl.glapicommon.model.entity.UserInterfaceInfo;
+
+import java.util.List;
 
 /**
 * @author 19328
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface UserInterfaceInfoMapper extends BaseMapper<UserInterfaceInfo> {
 
+    List<UserInterfaceInfo> listTopInvokeInterfaceInfo(int limit);
 }
 
 

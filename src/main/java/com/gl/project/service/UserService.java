@@ -2,8 +2,8 @@ package com.gl.project.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gl.glapicommon.model.entity.User;
 import com.gl.project.model.dto.user.UserQueryRequest;
-import com.gl.project.model.entity.User;
 import com.gl.project.model.vo.LoginUserVO;
 import com.gl.project.model.vo.UserVO;
 import java.util.List;

@@ -2,13 +2,11 @@ package com.gl.project.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gl.glapicommon.model.entity.UserInterfaceInfo;
 import com.gl.project.common.ErrorCode;
 import com.gl.project.exception.BusinessException;
-import com.gl.project.exception.ThrowUtils;
-import com.gl.project.model.entity.UserInterfaceInfo;
 import com.gl.project.service.UserInterfaceInfoService;
 import com.gl.project.mapper.UserInterfaceInfoMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**

@@ -4,12 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gl.glapicommon.model.entity.InterfaceInfo;
 import com.gl.project.common.ErrorCode;
 import com.gl.project.constant.CommonConstant;
 import com.gl.project.exception.BusinessException;
 import com.gl.project.exception.ThrowUtils;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
-import com.gl.project.model.entity.*;
+
 import com.gl.project.model.vo.InterfaceInfoVO;
 import com.gl.project.model.vo.UserVO;
 import com.gl.project.service.InterfaceInfoService;

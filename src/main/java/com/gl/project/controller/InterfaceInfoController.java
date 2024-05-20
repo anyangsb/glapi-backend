@@ -3,6 +3,9 @@ package com.gl.project.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gl.glapiclientsdk.client.GlApiClient;
+import com.gl.glapiclientsdk.model.Number;
+import com.gl.glapicommon.model.entity.InterfaceInfo;
+import com.gl.glapicommon.model.entity.User;
 import com.gl.project.annotation.AuthCheck;
 import com.gl.project.common.*;
 import com.gl.project.constant.CommonConstant;
@@ -11,8 +14,6 @@ import com.gl.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
-import com.gl.project.model.entity.InterfaceInfo;
-import com.gl.project.model.entity.User;
 import com.gl.project.model.enums.InterfaceInfoStatusEnum;
 import com.gl.project.service.InterfaceInfoService;
 import com.gl.project.service.UserService;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -259,7 +263,7 @@ public class InterfaceInfoController {
 
     @PostMapping("/invoke")
     public BaseResponse<Object> invokeInterfaceInfo(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest,
-                                                    HttpServletRequest request) {
+                                                    HttpServletRequest request) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -277,10 +281,23 @@ public class InterfaceInfoController {
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
         GlApiClient tempClient = new GlApiClient(accessKey, secretKey);
+        //利用反射获取参数
+        Class<? extends GlApiClient> aClass = tempClient.getClass();
+        InterfaceInfo selectInterface = interfaceInfoService.getById(interfaceInfoInvokeRequest.getId());
+        String name = selectInterface.getName();
         Gson gson = new Gson();
-        com.gl.glapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.gl.glapiclientsdk.model.User.class);
-        String usernameByPost = tempClient.getUserNameByPost(user);
-        return ResultUtils.success(usernameByPost);
+        if(userRequestParams.contains("num")){
+            Method method = aClass.getMethod(name, Number.class);
+            Number number = gson.fromJson(userRequestParams, Number.class);
+            String result = (String) method.invoke(tempClient, number);
+            return ResultUtils.success(result);
+        }else{
+            Method method = aClass.getMethod(name, com.gl.glapiclientsdk.model.User.class);
+            com.gl.glapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.gl.glapiclientsdk.model.User.class);
+            String result = (String) method.invoke(tempClient, user);
+            return ResultUtils.success(result);
+        }
+
     }
 
 

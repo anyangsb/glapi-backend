@@ -1,7 +1,7 @@
 package com.gl.project.mapper;
 
-import com.gl.project.model.entity.InterfaceInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gl.glapicommon.model.entity.InterfaceInfo;
 
 /**
 * @author 19328

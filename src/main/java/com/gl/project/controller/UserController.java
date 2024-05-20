@@ -1,6 +1,7 @@
 package com.gl.project.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gl.glapicommon.model.entity.User;
 import com.gl.project.annotation.AuthCheck;
 import com.gl.project.common.BaseResponse;
 import com.gl.project.common.DeleteRequest;
@@ -15,7 +16,6 @@ import com.gl.project.model.dto.user.UserQueryRequest;
 import com.gl.project.model.dto.user.UserRegisterRequest;
 import com.gl.project.model.dto.user.UserUpdateMyRequest;
 import com.gl.project.model.dto.user.UserUpdateRequest;
-import com.gl.project.model.entity.User;
 import com.gl.project.model.vo.LoginUserVO;
 import com.gl.project.model.vo.UserVO;
 import com.gl.project.service.UserService;

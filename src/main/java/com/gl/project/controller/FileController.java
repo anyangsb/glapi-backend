@@ -1,6 +1,7 @@
 package com.gl.project.controller;
 
 import cn.hutool.core.io.FileUtil;
+import com.gl.glapicommon.model.entity.User;
 import com.gl.project.common.BaseResponse;
 import com.gl.project.common.ErrorCode;
 import com.gl.project.common.ResultUtils;
@@ -8,7 +9,6 @@ import com.gl.project.constant.FileConstant;
 import com.gl.project.exception.BusinessException;
 import com.gl.project.manager.CosManager;
 import com.gl.project.model.dto.file.UploadFileRequest;
-import com.gl.project.model.entity.User;
 import com.gl.project.model.enums.FileUploadBizEnum;
 import com.gl.project.service.UserService;
 import java.io.File;

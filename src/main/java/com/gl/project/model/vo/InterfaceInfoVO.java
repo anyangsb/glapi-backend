@@ -1,6 +1,6 @@
 package com.gl.project.model.vo;
 
-import com.gl.project.model.entity.InterfaceInfo;
+import com.gl.glapicommon.model.entity.InterfaceInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,16 +1,14 @@
 package com.gl.project.aop;
 
+import com.gl.glapicommon.model.entity.User;
 import com.gl.project.annotation.AuthCheck;
 import com.gl.project.common.ErrorCode;
 import com.gl.project.exception.BusinessException;
-import com.gl.project.model.entity.User;
 import com.gl.project.model.enums.UserRoleEnum;
 import com.gl.project.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;

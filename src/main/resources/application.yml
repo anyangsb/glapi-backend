@@ -85,3 +85,12 @@ glapi:
   client:
     access-key: huangl
     secret-key: hl201003
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
