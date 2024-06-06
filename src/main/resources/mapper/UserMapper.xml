@@ -25,4 +25,8 @@
         userPassword,accessKey,secretKey,
         createTime,updateTime,isDelete
     </sql>
+    <update id="updateDesc">
+        update interface_info set description = #{newDesc} ${ew.customSqlSegment}
+    </update>
+
 </mapper>

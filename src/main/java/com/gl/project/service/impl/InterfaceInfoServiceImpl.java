@@ -1,7 +1,9 @@
 package com.gl.project.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gl.glapicommon.model.entity.InterfaceInfo;
@@ -9,6 +11,7 @@ import com.gl.project.common.ErrorCode;
 import com.gl.project.constant.CommonConstant;
 import com.gl.project.exception.BusinessException;
 import com.gl.project.exception.ThrowUtils;
+import com.gl.project.mapper.UserMapper;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 
 import com.gl.project.model.vo.InterfaceInfoVO;
@@ -24,12 +27,14 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,7 +54,8 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     @Resource
     private UserService userService;
 
-
+    @Resource
+    private UserMapper userMapper;
 
     @Override
     public void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add) {
@@ -68,6 +74,29 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         if (StringUtils.isNotBlank(name) && name.length() > 80) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "名称过长");
         }
+    }
+
+    @Override
+    public List<InterfaceInfoVO> getInterFaces(Long minId, Long maxId) {
+        LambdaQueryWrapper<InterfaceInfo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.ge(InterfaceInfo::getId, minId)
+                .le(InterfaceInfo::getId, maxId);
+        List<InterfaceInfo> list = this.list(wrapper);
+        List<InterfaceInfoVO> returnList = list.stream().map(e -> {
+            InterfaceInfoVO interfaceInfoVO = new InterfaceInfoVO();
+            BeanUtils.copyProperties(e, interfaceInfoVO);
+            return interfaceInfoVO;
+        }).collect(Collectors.toList());
+
+        return returnList;
+    }
+
+    @Override
+    public Boolean updateInterFaces(Long minId, Long maxId) {
+        UpdateWrapper<InterfaceInfo> wrapper = new UpdateWrapper<>();
+        wrapper.ge("id", minId)
+                .le("id", maxId);
+        return userMapper.updateDesc(wrapper,"test");
     }
 
     /**

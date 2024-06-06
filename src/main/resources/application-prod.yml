@@ -2,29 +2,26 @@
 # @author <a href="https://github.com/ligl">程序员鱼皮</a>
 # @from <a href="https://gl.icu">编程导航知识星球</a>
 server:
-  port: 8101
+  port: 7529
 spring:
   # 数据库配置
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/glapi
-    username: root
-    password: 123456
+    url: jdbc:mysql://111.229.101.185:3306/glapi
+    username: huangl
+    password: hl201003
+  profiles:
+    active: prod
   # Redis 配置
   # todo 需替换配置
   redis:
     database: 1
-    host: localhost
+    host: 111.229.101.185
     port: 6379
     timeout: 5000
-    password: 123456
+    password: hl201003
   # Elasticsearch 配置
-  # todo 需替换配置
-  elasticsearch:
-    uris: http://localhost:9200
-    username: root
-    password: 123456
 mybatis-plus:
   configuration:
     # 生产环境关闭日志
@@ -35,3 +32,16 @@ knife4j:
     enable: true
     username: root
     password: 123456
+glapi:
+  client:
+    access-key: huangl
+    secret-key: hl201003
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://111.229.101.185:8848

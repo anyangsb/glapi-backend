@@ -2,6 +2,7 @@ package com.gl.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gl.glapicommon.model.entity.InterfaceInfo;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author 19328
@@ -9,6 +10,7 @@ import com.gl.glapicommon.model.entity.InterfaceInfo;
 * @createDate 2024-05-14 11:37:55
 * @Entity com.gl.project.model.entity.InterfaceInfo
 */
+@Mapper
 public interface InterfaceInfoMapper extends BaseMapper<InterfaceInfo> {
 
 }

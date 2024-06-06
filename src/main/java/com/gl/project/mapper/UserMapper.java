@@ -1,8 +1,11 @@
 package com.gl.project.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gl.glapicommon.model.entity.InterfaceInfo;
 import com.gl.glapicommon.model.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author 19328
@@ -13,6 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
+    boolean updateDesc(@Param("ew") UpdateWrapper<InterfaceInfo> wrapper, @Param("newDesc") String desc);
 }
 
 

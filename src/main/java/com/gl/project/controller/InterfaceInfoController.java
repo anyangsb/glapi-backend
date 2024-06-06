@@ -15,6 +15,7 @@ import com.gl.project.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import com.gl.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.gl.project.model.enums.InterfaceInfoStatusEnum;
+import com.gl.project.model.vo.InterfaceInfoVO;
 import com.gl.project.service.InterfaceInfoService;
 import com.gl.project.service.UserService;
 import com.google.gson.Gson;
@@ -291,7 +292,11 @@ public class InterfaceInfoController {
             Number number = gson.fromJson(userRequestParams, Number.class);
             String result = (String) method.invoke(tempClient, number);
             return ResultUtils.success(result);
-        }else{
+        }else if(userRequestParams.equals("{}")){
+            Method method = aClass.getMethod(name);
+            String result = (String) method.invoke(tempClient);
+            return ResultUtils.success(result);
+        }else {
             Method method = aClass.getMethod(name, com.gl.glapiclientsdk.model.User.class);
             com.gl.glapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.gl.glapiclientsdk.model.User.class);
             String result = (String) method.invoke(tempClient, user);
@@ -300,5 +305,20 @@ public class InterfaceInfoController {
 
     }
 
+    @PostMapping("/test")
+    public BaseResponse<List<InterfaceInfoVO>> getInterFaces(@RequestParam Long minId,@RequestParam Long maxId){
+        if(minId<0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        return ResultUtils.success(interfaceInfoService.getInterFaces(minId,maxId));
+    }
+
+    @PostMapping("/test/update")
+    public BaseResponse<Boolean> updateInterFaces(@RequestParam Long minId,@RequestParam Long maxId){
+        if(minId<0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        return ResultUtils.success(interfaceInfoService.updateInterFaces(minId,maxId));
+    }
 
 }

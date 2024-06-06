@@ -20,6 +20,8 @@ import com.gl.project.model.vo.LoginUserVO;
 import com.gl.project.model.vo.UserVO;
 import com.gl.project.service.UserService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,8 +53,16 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Value("${pattern.dateformat}")
+    private String dateformat;
+
 
     // region 登录相关
+
+    @GetMapping("now")
+    public String now() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateformat));
+    }
 
     /**
      * 用户注册
